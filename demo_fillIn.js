@@ -59,7 +59,7 @@ function init(){
 	var faces = [];
 	var faceNormals = [];
 	var vertNormals = [];
-	var fileName = "maya_cube.obj";
+	var fileName = "dolphins.obj";
 
 	//scaling variables
 	var minMax = [100000000000000000.0, -100000000000000000.0,
