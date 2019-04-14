@@ -6,7 +6,24 @@
 
 
     <style type = "text/css">
-    	canvas { background: green; }
+
+      canvas {
+        background: green;
+        z-index: 0;
+        position: absolute;
+       }
+
+      #control_panel_1{
+        width:512px;
+        hight:100px;
+        background:grey;
+        z-index: 1;
+        position: relative;
+        top:18px;
+        left:0px;
+        font-size: 8pt;
+      }
+
     </style>
 
     <script type = "text/javascript" src = "https://www.khronos.org/registry/webgl/sdk/demos/common/webgl-utils.js"> </script>
@@ -19,7 +36,16 @@
 
   <body>
 
-
+  <div id = control_panel_1>
+    <label style="color:white;">Controls:</label>
+    <button type="button" onclick="switchToPan()">Pan</button>
+    <button type="button" onclick="switchToRotate()">Rotate</button>
+    <label style="color:white;">Renders:</label>
+    <button type="button" onclick="switchToSolid()">Solid</button>
+    <button type="button" onclick="switchToWire()">Wireframe</button>
+    <button type="button" onclick="switchToVert()">Vertices</button>
+    <button type="button" onclick="init()">Reset</button>
+  </div>
   <canvas id = "canvas_1" width = "512" height = "512"> Canvas </canvas>
 
 

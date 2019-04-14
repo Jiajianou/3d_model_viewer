@@ -5,12 +5,14 @@ var vertices,indices;
 var numVerts = 0;
 var isMouseDown = false;
 var isMouseDragged = false;
+var shouldRotate = true;
+var renderMode = 1;
 
 var lastMouseCurrentLocationX, lastMouseCurrentLocationY;
 var mouseTravelX, mouseTravelY;
 var startTime, endTime;
 
-var tX,tY,tZ,rX,rY,rZ;
+var tX,tY,tZ,rX,rY;
 
 var tMat,rMatX,rMatY,pMat,sMat,skMat,vMat,mMat;
 
@@ -59,7 +61,26 @@ function render(){
   mMat = gl.getUniformLocation(program, "mM");
   gl.uniformMatrix4fv(mMat, false, modelMat);
 
-	gl.drawElements(gl.TRIANGLES, numVerts, gl.UNSIGNED_SHORT,0);
+
+  if(renderMode === 1){
+
+    gl.drawElements(gl.TRIANGLES, numVerts, gl.UNSIGNED_SHORT,0);
+
+  }
+
+  if(renderMode === 2){
+
+    gl.drawElements(gl.LINE_STRIP, numVerts, gl.UNSIGNED_SHORT,0);
+
+  }
+
+  if(renderMode === 3){
+
+    gl.drawElements(gl.POINTS, numVerts, gl.UNSIGNED_SHORT,0);
+
+  }
+
+  gl.flush();
 }
 
 
@@ -113,7 +134,7 @@ function mouseUp(event){
   timePassed *= 0.001
   var seconds = Math.round(timePassed);
 
-  console.log(timePassed);
+  //console.log(timePassed);
 
 }
 
@@ -124,7 +145,16 @@ function mouseMove(event){
   mouseTravelY = event.clientY - lastMouseCurrentLocationY;
 
   if(isMouseDown){
-    rotateObject();
+
+    if(shouldRotate){
+
+      rotateObject();
+
+    } else {
+
+      panObject();
+    }
+
   }
 }
 
@@ -137,28 +167,48 @@ function mouseMove(event){
 
 function rotateObject(){
 
-  rX -= mouseTravelY*0.001;
 
-  rotateMatX[0] = 1.0;
-  rotateMatX[5] = Math.cos(rX);
-  rotateMatX[6] = Math.sin(rX);
-  rotateMatX[9] = -Math.sin(rX);
-  rotateMatX[10] = Math.cos(rX);
-  rotateMatX[15] = 1.0;
+    rX -= mouseTravelY*0.001;
+
+    rotateMatX[0] = 1.0;
+    rotateMatX[5] = Math.cos(rX);
+    rotateMatX[6] = Math.sin(rX);
+    rotateMatX[9] = -Math.sin(rX);
+    rotateMatX[10] = Math.cos(rX);
+    rotateMatX[15] = 1.0;
 
 
-  rY -= mouseTravelX*0.001;
+    rY -= mouseTravelX*0.001;
 
-  rotateMatY[0] = Math.cos(rY);
-  rotateMatY[2] = -Math.sin(rY);
-  rotateMatY[5] = 1.0;
-  rotateMatY[8] = Math.sin(rY);
-  rotateMatY[10] = Math.cos(rY);
-  rotateMatY[15] = 1.0;
+    rotateMatY[0] = Math.cos(rY);
+    rotateMatY[2] = -Math.sin(rY);
+    rotateMatY[5] = 1.0;
+    rotateMatY[8] = Math.sin(rY);
+    rotateMatY[10] = Math.cos(rY);
+    rotateMatY[15] = 1.0;
+
 
   render();
 
 }
+
+
+//=========================================================Translation/Panning
+
+function panObject(){
+
+  tX += mouseTravelX*0.0001;
+
+  tY -= mouseTravelY*0.0001;
+
+  transMat[12] = tX;
+
+  transMat[13] = tY;
+
+  render();
+
+}
+
 
 
 
@@ -186,8 +236,46 @@ function scrollZoom(event){
 
 
 
+//===============================================================Rotate or Pan switching
+
+function switchToPan(){
+
+  shouldRotate=false;
+
+}
+
+function switchToRotate(){
+
+  shouldRotate=true;
+
+}
 
 
+//=================================================================Rendering Mode Switching:
+
+function switchToSolid(){
+
+  renderMode = 1;
+
+  render();
+
+}
+
+function switchToWire(){
+
+  renderMode = 2;
+
+  render();
+
+}
+
+function switchToVert(){
+
+  renderMode = 3;
+
+  render();
+
+}
 
 
 
@@ -216,17 +304,18 @@ function init(){
 
   rX = 0.0;
   rY = 0.0;
-  rZ = 0.0;
 
   fov=40.00;
   aspect = 1.0;
   near = 0.1;
   far = 50.00;
 
+  renderMode = 1;
 
   transMat = identityMatrix();
   rotateMatX = identityMatrix();
   rotateMatY = identityMatrix();
+  rotateMatZ = identityMatrix();
   projMat = identityMatrix();
   viewMat = identityMatrix();
   modelMat = identityMatrix();
@@ -260,6 +349,9 @@ function init(){
 
   var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 
+
+  //vec3 La = vec3 (0.2, 0.2, 0.2)
+
   gl.shaderSource(fragmentShader, [
     '#ifdef GL_ES',
     'precision highp float;',
@@ -271,8 +363,8 @@ function init(){
     'vec3 position_eye = vec3 (0.0, 0.0, 1.0);',
     'vec3 light_position_world  = vec3 (0.0, 0.0, -2.0);',
     'vec3 Ls = vec3 (1.0, 1.0, 1.0);',
-    'vec3 Ld = vec3 (0.7, 0.7, 0.7);',
-    'vec3 La = vec3 (0.2, 0.2, 0.2);',
+    'vec3 Ld = vec3 (0.7, 0.6, 0.4);',
+    'vec3 La = vec3 (0.39, 0.4, 0.41);',
 
 
     'vec3 Ks = vec3 (1.0, 1.0, 1.0);',
