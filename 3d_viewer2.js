@@ -88,7 +88,7 @@ function render(){
 
 
 
-//=====================================================Identity function to create an identity matrix:
+//=====================================================Identity Matrix Generation Function:
 function identityMatrix(){
   var out = new Float32Array(16);
 
@@ -168,7 +168,7 @@ function mouseMove(event){
 function rotateObject(){
 
 
-    rX -= mouseTravelY*0.001;
+    rX += mouseTravelY*0.001;
 
     rotateMatX[0] = 1.0;
     rotateMatX[5] = Math.cos(rX);
@@ -178,7 +178,7 @@ function rotateObject(){
     rotateMatX[15] = 1.0;
 
 
-    rY -= mouseTravelX*0.001;
+    rY += mouseTravelX*0.001;
 
     rotateMatY[0] = Math.cos(rY);
     rotateMatY[2] = -Math.sin(rY);
@@ -308,7 +308,7 @@ function init(){
   fov=40.00;
   aspect = 1.0;
   near = 0.1;
-  far = 50.00;
+  far = 100.00;
 
   renderMode = 1;
 
@@ -320,6 +320,15 @@ function init(){
   viewMat = identityMatrix();
   modelMat = identityMatrix();
 
+  ang = Math.tan((fov * 0.5) * Math.PI/180);
+
+  projMat[0]=0.5/ang;
+  projMat[5]=0.5*aspect/ang;
+  projMat[10]=-(far+near)/(far-near);
+  projMat[11]=(-2.0*far*near)/(far-near);
+  projMat[14]=-1.0;
+
+  viewMat[14] = -1.5;
 
 
   var vertexShader = gl.createShader(gl.VERTEX_SHADER);
@@ -351,6 +360,8 @@ function init(){
 
 
   //vec3 La = vec3 (0.2, 0.2, 0.2)
+  //    'vec3 position_eye = vec3 (0.0, 0.0, 1.0);',
+  //'vec3 light_position_world  = vec3 (0.0, 0.0, 2.0);',
 
   gl.shaderSource(fragmentShader, [
     '#ifdef GL_ES',
@@ -360,8 +371,8 @@ function init(){
     'varying vec3 vertNorm;',
     'varying vec4 fragPos;',
 
-    'vec3 position_eye = vec3 (0.0, 0.0, 1.0);',
-    'vec3 light_position_world  = vec3 (0.0, 0.0, -2.0);',
+    'vec3 position_eye = vec3 (0.0, 0.0, -2.0);',
+    'vec3 light_position_world  = vec3 (0.0, 0.0, 2.0);',
     'vec3 Ls = vec3 (1.0, 1.0, 1.0);',
     'vec3 Ld = vec3 (0.7, 0.6, 0.4);',
     'vec3 La = vec3 (0.39, 0.4, 0.41);',
