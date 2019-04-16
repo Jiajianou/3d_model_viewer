@@ -426,7 +426,7 @@ function init(){
 	var faces = [];
 	var faceNormals = [];
 	var vertNormals = [];
-	var fileName = "dolphins.obj";
+	var fileName = "triangulated_cube.obj";
 
 	//scaling variables
 	var minMax = [100000000000000000.0, -100000000000000000.0,
@@ -489,7 +489,24 @@ function init(){
 				while (line.charAt(cIdx) != " " && cIdx < line.length)
 								cIdx++;
 				var end = cIdx;
-				var num = line.substring(start, end);
+
+        //modification:
+
+        var start2 = 0;
+        var index2 = 0;
+
+        var temp_line = line.substring(start,end);
+
+        while(temp_line.charAt(index2) != "/" && index2 < temp_line.length) index2++;
+
+        var end2 = index2;
+
+
+        //end modification:
+				//var num = line.substring(start, end);
+
+        var num = temp_line.substring(start2,end2);
+        console.log(num);
 				var val = Number(num) - 1;
 				faces[faces.length] = val;
 				cIdx++;
