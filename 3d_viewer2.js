@@ -307,8 +307,8 @@ function init(){
 
   fov=40.00;
   aspect = 1.0;
-  near = 0.1;
-  far = 100.00;
+  near = 0.5;
+  far = 50.00;
 
   renderMode = 1;
 
