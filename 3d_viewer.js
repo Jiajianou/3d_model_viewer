@@ -307,7 +307,7 @@ function init(){
 
   fov=40.00;
   aspect = 1.0;
-  near = 0.5;
+  near = 0.2;
   far = 50.00;
 
   renderMode = 1;
@@ -426,7 +426,7 @@ function init(){
 	var faces = [];
 	var faceNormals = [];
 	var vertNormals = [];
-	var fileName = "triangulated_cube.obj";
+	var fileName = "just_chasis.obj";
 
 	//scaling variables
 	var minMax = [100000000000000000.0, -100000000000000000.0,
