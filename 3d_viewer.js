@@ -426,7 +426,7 @@ function init(){
 	var faces = [];
 	var faceNormals = [];
 	var vertNormals = [];
-	var fileName = "just_chasis.obj";
+	var fileName = "chassis.obj";
 
 	//scaling variables
 	var minMax = [100000000000000000.0, -100000000000000000.0,
